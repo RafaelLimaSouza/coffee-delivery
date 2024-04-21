@@ -59,6 +59,7 @@
 - `npm i`
 - `npm i @rocketseat/eslint-config -D`
 - `npm i styled-components @types/styled-components`
+- `npm i react-router-dom`
 
 ### Copyrights
 
