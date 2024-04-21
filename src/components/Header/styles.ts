@@ -9,7 +9,7 @@ export const HeaderContainer = styled.header`
 
   max-width: 100%;
 
-  padding: 3.2rem 16rem;
+  padding: 3.2rem 0;
 
   aside {
     display: flex;

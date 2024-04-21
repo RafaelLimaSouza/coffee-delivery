@@ -7,3 +7,7 @@ export const DefaultLayoutContainer = styled.div`
   max-width: 1440px;
   margin: 0 auto;
 `
+
+export const Wrapper = styled.div`
+  padding: 0 16rem;
+`
