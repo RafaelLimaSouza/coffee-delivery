@@ -1,9 +1,20 @@
 import logo from '../../assets/logo.svg'
+
+import { NavLink } from 'react-router-dom'
+
 import { MapPin, ShoppingCart } from '@phosphor-icons/react'
 
-import { HeaderContainer, Location, Cart } from './styles'
+import { HeaderContainer, Location, Cart, Total } from './styles'
+
+import { useCart } from '../../hooks/use-Cart.hook'
 
 export function Header() {
+  const { order } = useCart()
+
+  const quantityOfItems = order.length
+
+  const cartIsNotEmpty = quantityOfItems > 0
+
   return (
     <HeaderContainer>
       <img src={logo} alt="" />
@@ -12,10 +23,18 @@ export function Header() {
           <MapPin size={22} weight="fill" />
           <span>Lisboa, PT</span>
         </Location>
-        <Cart>
-          <ShoppingCart size={22} weight="fill" />
-        </Cart>
+        <NavLink to="/checkout">
+          <Cart>
+            <ShoppingCart size={22} weight="fill" />
+          </Cart>
+        </NavLink>
       </aside>
+
+      {cartIsNotEmpty && (
+        <Total>
+          <span>{quantityOfItems}</span>
+        </Total>
+      )}
     </HeaderContainer>
   )
 }
