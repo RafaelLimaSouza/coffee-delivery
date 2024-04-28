@@ -37,8 +37,14 @@ interface CartContextProps {
   removeItem: (productId: string) => void
   addUnit: (productId: string) => void
   removeUnit: (productId: string) => void
-  confirmOrder: (personalInfo: IPersonalDataValues) => void
+  confirmOrder: (
+    personalInfo: IPersonalDataValues,
+    afterSubmit: () => void,
+  ) => void
+  getTax: () => number
 }
+
+const TAX = 3.5
 
 export const CartContext = createContext({} as CartContextProps)
 
@@ -111,12 +117,19 @@ export const CartContextProvider = ({ children }: CartContextProvider) => {
     })
   }
 
-  const confirmOrder = (personalInfo: IPersonalDataValues) => {
+  const confirmOrder = (
+    personalInfo: IPersonalDataValues,
+    afterSubmit: () => void,
+  ) => {
     setBill({
       products: order,
       personalInfo,
     })
+
+    afterSubmit()
   }
+
+  const getTax = () => TAX
 
   return (
     <CartContext.Provider
@@ -128,6 +141,7 @@ export const CartContextProvider = ({ children }: CartContextProvider) => {
         addUnit,
         removeUnit,
         confirmOrder,
+        getTax,
       }}
     >
       {children}

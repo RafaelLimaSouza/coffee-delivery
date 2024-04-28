@@ -32,18 +32,20 @@ import {
 } from './styles'
 import { QuantityInput } from '../../components/Form/QuantityInput'
 import { IPersonalDataValues } from '../../contexts/cart.context'
-
-const TAX = 3.5
+import { useNavigate } from 'react-router-dom'
 
 export function Checkout() {
   const theme = useTheme()
 
-  const { order, addUnit, removeUnit, confirmOrder, removeItem } = useCart()
+  const navigate = useNavigate()
+
+  const { order, addUnit, removeUnit, confirmOrder, removeItem, getTax } =
+    useCart()
 
   const { register, watch, handleSubmit } = useForm<IPersonalDataValues>()
 
   function onSubmit(data: IPersonalDataValues) {
-    confirmOrder(data)
+    confirmOrder(data, () => navigate('/success'))
   }
 
   const getProduct = (productId: string) =>
@@ -192,12 +194,12 @@ export function Checkout() {
 
             <div>
               <span>Entrega</span>
-              <span>{`R$ ${TAX}`}</span>
+              <span>{`R$ ${getTax()}`}</span>
             </div>
 
             <div>
               <span>Total</span>
-              <span>{`R$ ${(totalAmount + TAX).toFixed(2)}`}</span>
+              <span>{`R$ ${(totalAmount + getTax()).toFixed(2)}`}</span>
             </div>
           </div>
 
