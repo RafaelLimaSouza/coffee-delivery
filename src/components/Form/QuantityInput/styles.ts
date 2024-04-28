@@ -5,8 +5,10 @@ export const QuantityInputContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-around;
 
-  height: 3.8rem;
+  min-width: 7.2rem;
+  height: 100%;
   border-radius: 6px;
 
   gap: 0.4rem;
