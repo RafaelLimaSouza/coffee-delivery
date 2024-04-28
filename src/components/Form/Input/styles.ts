@@ -1,6 +1,12 @@
 import styled from 'styled-components'
 import { mixins } from '../../../styles/mixins'
 
+export const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column !important;
+  gap: 0.75rem !important;
+`
+
 interface InputFieldProps {
   $fullWidth: boolean
 }
@@ -27,4 +33,9 @@ export const InputField = styled.input<InputFieldProps>`
     color: ${(props) => props.theme.colors['base-text']};
     background-color: ${(props) => props.theme.colors['base-input']};
   }
+`
+
+export const ErrorMessage = styled.span`
+  font-size: 1.2rem !important;
+  color: #ff0505 !important;
 `

@@ -220,3 +220,8 @@ export const RemoveButton = styled.button`
     line-height: 0;
   }
 `
+
+export const ErrorMessage = styled.span`
+  font-size: 1.2rem !important;
+  color: #ff0505 !important;
+`

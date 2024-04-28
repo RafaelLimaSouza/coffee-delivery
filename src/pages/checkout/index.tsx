@@ -1,3 +1,12 @@
+import { useNavigate } from 'react-router-dom'
+
+import { useForm } from 'react-hook-form'
+
+import { useTheme } from 'styled-components'
+
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+
 import {
   MapPin,
   CurrencyDollar,
@@ -7,13 +16,11 @@ import {
   Trash,
 } from '@phosphor-icons/react'
 
-import { useForm } from 'react-hook-form'
-
-import { useTheme } from 'styled-components'
-
 import { Input } from '../../components/Form/Input'
 import { Radio } from '../../components/Form/Radio'
+import { QuantityInput } from '../../components/Form/QuantityInput'
 
+import { IPersonalDataValues } from '../../contexts/cart.context'
 import { useCart } from '../../hooks/use-Cart.hook'
 
 import { coffees } from '../../data/products.json'
@@ -29,10 +36,23 @@ import {
   CartItems,
   CartItem,
   RemoveButton,
+  ErrorMessage,
 } from './styles'
-import { QuantityInput } from '../../components/Form/QuantityInput'
-import { IPersonalDataValues } from '../../contexts/cart.context'
-import { useNavigate } from 'react-router-dom'
+
+const formSchema = z.object({
+  cep: z.number({ invalid_type_error: 'Informe o CEP' }),
+  street: z.string().min(1, 'Informe a rua'),
+  number: z.number({ invalid_type_error: 'Informe o cep' }),
+  complement: z.string().nullable(),
+  district: z.string().min(1, 'Informe o bairro'),
+  city: z.string().min(1, 'Informe a cidade'),
+  uf: z.string().min(1, 'Informe a UF'),
+  payment_type: z.enum(['credit', 'debit', 'cash'], {
+    invalid_type_error: 'Informe um método de pagamento',
+  }),
+})
+
+export type OrderInfo = z.infer<typeof formSchema>
 
 export function Checkout() {
   const theme = useTheme()
@@ -42,9 +62,21 @@ export function Checkout() {
   const { order, addUnit, removeUnit, confirmOrder, removeItem, getTax } =
     useCart()
 
-  const { register, watch, handleSubmit } = useForm<IPersonalDataValues>()
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IPersonalDataValues>({
+    resolver: zodResolver(formSchema),
+  })
 
   function onSubmit(data: IPersonalDataValues) {
+    if (order.length === 0) {
+      throw Error('Pelo menos um item é obrigatório')
+      return
+    }
+
     confirmOrder(data, () => navigate('/success'))
   }
 
@@ -53,7 +85,7 @@ export function Checkout() {
 
   const totalAmount = order.reduce(
     (acc, cur) =>
-      (acc = acc + cur.quantity * (getProduct(cur.productId)?.price ?? 1)),
+      (acc += cur.quantity * (getProduct(cur.productId)?.price ?? 1)),
     0,
   )
 
@@ -75,44 +107,54 @@ export function Checkout() {
           <div>
             <Input
               placeholder="CEP"
-              required
               {...register('cep', {
                 valueAsNumber: true,
               })}
+              error={errors.cep}
             />
 
             <Input
               placeholder="Rua"
               fullWidth
-              required
               {...register('street')}
+              error={errors.street}
             />
 
             <div>
               <Input
                 placeholder="Numero"
-                required
                 {...register('number', { valueAsNumber: true })}
+                error={errors.number}
               />
 
               <Input
                 placeholder="Complemento"
                 fullWidth
                 {...register('complement')}
+                error={errors.complement}
               />
             </div>
 
             <div>
-              <Input placeholder="Bairro" required {...register('district')} />
+              <Input
+                placeholder="Bairro"
+                {...register('district')}
+                error={errors.district}
+              />
 
               <Input
                 placeholder="Cidade"
                 fullWidth
-                required
                 {...register('city')}
+                error={errors.city}
               />
 
-              <Input placeholder="UF" size={5} required {...register('uf')} />
+              <Input
+                placeholder="UF"
+                size={5}
+                {...register('uf')}
+                error={errors.uf}
+              />
             </div>
           </div>
         </FormControllerAddress>
@@ -156,6 +198,10 @@ export function Checkout() {
               isSelected={paymentMode === 'cash'}
             />
           </div>
+
+          {errors.payment_type && (
+            <ErrorMessage>{errors.payment_type?.message}</ErrorMessage>
+          )}
         </FormControllerPayment>
       </DataContainer>
 

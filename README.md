@@ -62,6 +62,8 @@
 - `npm i react-router-dom`
 - `npm i @phosphor-icons/react`
 - `npm i react-hook-form`
+- `npm i zod`
+- `npm i @hookform/resolvers`
 
 ### Copyrights
 
