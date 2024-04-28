@@ -61,6 +61,7 @@
 - `npm i styled-components @types/styled-components`
 - `npm i react-router-dom`
 - `npm i @phosphor-icons/react`
+- `npm i react-hook-form`
 
 ### Copyrights
 

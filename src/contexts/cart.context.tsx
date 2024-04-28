@@ -9,14 +9,35 @@ export interface CoffeeProps {
   image: string
 }
 
+export interface IPersonalDataValues {
+  cep: string
+  street: string
+  number: number
+  complement?: string
+  district: string
+  city: string
+  uf: string
+  payment_type: 'credit' | 'debit' | 'cash'
+}
+
 interface Order {
   productId: string
   quantity: number
 }
 
+interface Bill {
+  products: Order[]
+  personalInfo: IPersonalDataValues | null
+}
+
 interface CartContextProps {
   order: Order[]
+  bill: Bill
   addItem: (productId: string, quantity: number) => void
+  removeItem: (productId: string) => void
+  addUnit: (productId: string) => void
+  removeUnit: (productId: string) => void
+  confirmOrder: (personalInfo: IPersonalDataValues) => void
 }
 
 export const CartContext = createContext({} as CartContextProps)
@@ -27,6 +48,7 @@ interface CartContextProvider {
 
 export const CartContextProvider = ({ children }: CartContextProvider) => {
   const [order, setOrder] = useState<Order[]>([])
+  const [bill, setBill] = useState<Bill>({ products: [], personalInfo: null })
 
   const addItem = (productId: string, quantity: number) => {
     setOrder((state) => {
@@ -53,8 +75,61 @@ export const CartContextProvider = ({ children }: CartContextProvider) => {
     })
   }
 
+  const removeItem = (productId: string) => {
+    setOrder((state) => {
+      return state.filter((product) => product.productId !== productId)
+    })
+  }
+
+  const addUnit = (productId: string) => {
+    setOrder((state) => {
+      return state.map((product) => {
+        if (product.productId === productId) {
+          return {
+            ...product,
+            quantity: product.quantity++,
+          }
+        }
+
+        return product
+      })
+    })
+  }
+
+  const removeUnit = (productId: string) => {
+    setOrder((state) => {
+      return state.map((product) => {
+        if (product.productId === productId) {
+          return {
+            ...product,
+            quantity: product.quantity--,
+          }
+        }
+
+        return product
+      })
+    })
+  }
+
+  const confirmOrder = (personalInfo: IPersonalDataValues) => {
+    setBill({
+      products: order,
+      personalInfo,
+    })
+  }
+
   return (
-    <CartContext.Provider value={{ order, addItem }}>
+    <CartContext.Provider
+      value={{
+        order,
+        bill,
+        addItem,
+        removeItem,
+        addUnit,
+        removeUnit,
+        confirmOrder,
+      }}
+    >
       {children}
     </CartContext.Provider>
   )

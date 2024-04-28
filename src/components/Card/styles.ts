@@ -70,6 +70,8 @@ export const Footer = styled.div`
     flex-direction: row;
     align-items: center;
     gap: 0.8rem;
+
+    height: 100%;
   }
 
   span {
