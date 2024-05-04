@@ -32,6 +32,9 @@
 - [ X ] React-hook-form
 - [ X ] Styled-component
 - [ X ] Eslint
+- [ X ] Zod
+- [ X ] Phosphor icons
+- [ X ] Immer
 
 ### Functional Requirements
 
@@ -64,6 +67,7 @@
 - `npm i react-hook-form`
 - `npm i zod`
 - `npm i @hookform/resolvers`
+- `npm i immer`
 
 ### Copyrights
 
