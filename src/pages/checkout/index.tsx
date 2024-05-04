@@ -228,7 +228,7 @@ export function Checkout() {
                     </div>
                   </div>
                 </div>
-                <span>R$ {item.quantity}</span>
+                <span>R$ {getProduct(item.productId)?.price?.toFixed(2)}</span>
               </CartItem>
             ))}
           </CartItems>
