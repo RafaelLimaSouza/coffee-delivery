@@ -1,4 +1,4 @@
-import { createContext, useReducer, useState } from 'react'
+import { createContext, useEffect, useReducer, useState } from 'react'
 import { cartReducer } from '../reducers/cart/reducer'
 
 import {
@@ -61,7 +61,17 @@ interface CartContextProvider {
 }
 
 export const CartContextProvider = ({ children }: CartContextProvider) => {
-  const [order, dispatch] = useReducer(cartReducer, [])
+  const [order, dispatch] = useReducer(cartReducer, [], (state) => {
+    const storedStateAsJSON = localStorage.getItem(
+      '@coffee-delivery:cart-state-1.0.0',
+    )
+
+    if (storedStateAsJSON) {
+      return JSON.parse(storedStateAsJSON)
+    }
+
+    return state
+  })
 
   const [bill, setBill] = useState<Bill>({ products: [], personalInfo: null })
 
@@ -89,6 +99,14 @@ export const CartContextProvider = ({ children }: CartContextProvider) => {
   }
 
   const getTax = () => TAX
+
+  useEffect(() => {
+    if (order) {
+      const stateJSON = JSON.stringify(order)
+
+      localStorage.setItem('@coffee-delivery:cart-state-1.0.0', stateJSON)
+    }
+  }, [order])
 
   return (
     <CartContext.Provider

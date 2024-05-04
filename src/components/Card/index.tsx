@@ -10,10 +10,11 @@ import { useState } from 'react'
 
 interface CardProps {
   coffee: CoffeeProps
+  defaultQuantity: number
 }
 
-export function Card({ coffee }: CardProps) {
-  const [quantity, setQuantity] = useState(0)
+export function Card({ coffee, defaultQuantity }: CardProps) {
+  const [quantity, setQuantity] = useState(defaultQuantity)
 
   const { addItem } = useCart()
 

@@ -17,9 +17,15 @@ import {
   Products,
 } from './styles'
 import { CoffeeProps } from '../../contexts/cart.context'
+import { useCart } from '../../hooks/use-Cart.hook'
 
 export function CoffeeList() {
   const theme = useTheme()
+
+  const { order } = useCart()
+
+  const getQuantity = (productId: string) =>
+    order.find((item) => item.productId === productId)?.quantity ?? 0
 
   return (
     <CoffeeListContainer>
@@ -70,7 +76,11 @@ export function CoffeeList() {
 
         <ul>
           {coffees.map((coffee: CoffeeProps) => (
-            <Card key={coffee.id} coffee={coffee} />
+            <Card
+              key={coffee.id}
+              coffee={coffee}
+              defaultQuantity={getQuantity(coffee.id)}
+            />
           ))}
         </ul>
       </Products>
