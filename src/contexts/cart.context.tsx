@@ -1,4 +1,12 @@
-import { createContext, useState } from 'react'
+import { createContext, useReducer, useState } from 'react'
+import { cartReducer } from '../reducers/cart/reducer'
+
+import {
+  addItemAction,
+  removeItemAction,
+  addUnitAction,
+  removeUnitAction,
+} from '../reducers/cart/action'
 
 export interface CoffeeProps {
   id: string
@@ -20,7 +28,7 @@ export interface IPersonalDataValues {
   payment_type: 'credit' | 'debit' | 'cash'
 }
 
-interface Order {
+export interface Order {
   productId: string
   quantity: number
 }
@@ -53,69 +61,20 @@ interface CartContextProvider {
 }
 
 export const CartContextProvider = ({ children }: CartContextProvider) => {
-  const [order, setOrder] = useState<Order[]>([])
+  const [order, dispatch] = useReducer(cartReducer, [])
+
   const [bill, setBill] = useState<Bill>({ products: [], personalInfo: null })
 
-  const addItem = (productId: string, quantity: number) => {
-    setOrder((state) => {
-      const productIndex = state.findIndex(
-        (product) => product.productId === productId,
-      )
+  const addItem = (productId: string, quantity: number) =>
+    dispatch(addItemAction(productId, quantity))
 
-      if (productIndex >= 0) {
-        state[productIndex] = {
-          productId,
-          quantity,
-        }
+  const removeItem = (productId: string) =>
+    dispatch(removeItemAction(productId))
 
-        return state
-      }
+  const addUnit = (productId: string) => dispatch(addUnitAction(productId))
 
-      return [
-        ...state,
-        {
-          productId,
-          quantity,
-        },
-      ]
-    })
-  }
-
-  const removeItem = (productId: string) => {
-    setOrder((state) => {
-      return state.filter((product) => product.productId !== productId)
-    })
-  }
-
-  const addUnit = (productId: string) => {
-    setOrder((state) => {
-      return state.map((product) => {
-        if (product.productId === productId) {
-          return {
-            ...product,
-            quantity: product.quantity++,
-          }
-        }
-
-        return product
-      })
-    })
-  }
-
-  const removeUnit = (productId: string) => {
-    setOrder((state) => {
-      return state.map((product) => {
-        if (product.productId === productId) {
-          return {
-            ...product,
-            quantity: product.quantity--,
-          }
-        }
-
-        return product
-      })
-    })
-  }
+  const removeUnit = (productId: string) =>
+    dispatch(removeUnitAction(productId))
 
   const confirmOrder = (
     personalInfo: IPersonalDataValues,
