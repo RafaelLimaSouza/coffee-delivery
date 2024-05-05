@@ -17,11 +17,15 @@ export function QuantityInput({
 
   return (
     <QuantityInputContainer>
-      <Button onClick={decreaseItem} disabled={quantityIsEmpty}>
+      <Button
+        data-testid="decrease-button"
+        onClick={decreaseItem}
+        disabled={quantityIsEmpty}
+      >
         <Minus size={14} />
       </Button>
       <span>{quantity}</span>
-      <Button onClick={increaseItem}>
+      <Button data-testid="increase-button" onClick={increaseItem}>
         <Plus size={14} />
       </Button>
     </QuantityInputContainer>

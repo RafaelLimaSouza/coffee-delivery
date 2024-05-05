@@ -32,7 +32,7 @@ export function Card({ coffee, defaultQuantity }: CardProps) {
 
   return (
     <CardContainer>
-      <img src={coffee.image} alt="" />
+      <img data-testid="card-image" src={coffee.image} alt="" />
 
       <Tags>
         {coffee.tags.map((tag) => (
