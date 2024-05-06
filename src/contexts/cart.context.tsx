@@ -38,7 +38,7 @@ interface Bill {
   personalInfo: IPersonalDataValues | null
 }
 
-interface CartContextProps {
+export interface CartContextProps {
   order: Order[]
   bill: Bill
   addItem: (productId: string, quantity: number) => void

@@ -33,7 +33,7 @@ export function Header() {
       </aside>
 
       {cartIsNotEmpty && (
-        <Total>
+        <Total data-textid="total">
           <span>{quantityOfItems}</span>
         </Total>
       )}
