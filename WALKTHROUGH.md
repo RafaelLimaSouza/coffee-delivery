@@ -39,3 +39,9 @@
    environment: 'happy-dom'
    ```
 9. Install library to management user's event `npm install -D @testing-library/user-event`
+10. Install library to test some styles using styled-components `npm i -D jest-styled-components`
+11. Add config to vitest read the setup files on vitest.config.ts <br />
+
+```
+import 'jest-styled-components'
+```
